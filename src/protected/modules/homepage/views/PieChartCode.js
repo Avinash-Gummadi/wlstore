@@ -3,8 +3,7 @@ import { PieChart } from 'react-minimal-pie-chart';
 import DocumentMeta from 'react-document-meta';
 import Header from './Header';
 import Footer from './Footer';
-// import { useReactToPrint } from "react-to-print";
-import ReactToPrint from "react-to-print";
+import { useReactToPrint } from "react-to-print";
 
 export default function PieChartCode() {
     const [heading, setheading] = useState('');
@@ -25,6 +24,7 @@ export default function PieChartCode() {
         }
     }
     const handleTitle = (e) => {
+        console.log("handleTitle: ", e);
         if (!(/^\s/.test(e.target.value))) {
             settitle(e.target.value);
         }
@@ -67,78 +67,36 @@ export default function PieChartCode() {
             });
         }
     }
-    // const printPie = () => {
-    //     var printContents = document.getElementById('printIdPie').innerHTML;
-    //     var originalContents = document.body.innerHTML;
-    //     document.body.innerHTML = printContents;
-    //     window.print();
-    //     document.body.innerHTML = originalContents;
-    // }
+    const reactToPrintContent = React.useCallback(() => {
+        return componentRef.current;
+    }, [componentRef]);
+
+    const handlePrint = useReactToPrint({
+        content: reactToPrintContent,
+        documentTitle: `${heading.split(' ')[0]}_wlstore`,
+        removeAfterPrint: true
+    });
     const meta = {
         title: 'Pie Chart WebLaunch Store',
         description: 'List your Bucket of Works. You can edit, complete, delete the list',
-        canonical: 'http://localhost:3000/todo',
+        canonical: 'http://localhost:3000/piechart',
         meta: {
             name: {
                 keywords: 'ToDo, Bucket, Works, Tasks'
             }
         }
     };
-    // const reactToPrintContent = React.useCallback(() => {
-    //     return componentRef.current;
-    // }, [componentRef]);
-
-    // const handlePrint = useReactToPrint({
-    //     content: reactToPrintContent,
-    //     removeAfterPrint: true
-    // });
-    const reactToPrintContent = React.useCallback(() => {
-        return componentRef.current;
-    }, [componentRef.current]);
-
-    const reactToPrintTrigger = React.useCallback(() => {
-        // NOTE: could just as easily return <SomeComponent />. Do NOT pass an `onClick` prop
-        // to the root node of the returned component as it will be overwritten.
-
-        // Bad: the `onClick` here will be overwritten by `react-to-print`
-        // return <button onClick={() => alert('This will not work')}>Print this out!</button>;
-
-        // Good
-        return (
-            <button>
-                Print a Functional Component (using `forwardRef`) using a Functional
-                Component
-            </button>
-        ); // eslint-disable-line max-len
-    }, []);
     return (
         <DocumentMeta {...meta}>
             <Header />
             <div className='container' style={{ marginTop: "100px" }}>
-                <div>
-                    {/* <ReactToPrint
-                        trigger={() => {
-                            return <a href="#">Print this out!</a>;
-                        }}
-                        content={() => document.getElementById('printIdPie').innerHTML}
-                    /> */}
-                    {/* <button onClick={handlePrint}>Print</button> */}
-                    <ReactToPrint
-                        content={reactToPrintContent}
-                        documentTitle="AwesomeFileName"
-                        removeAfterPrint
-                        trigger={reactToPrintTrigger}
-                    />
-                </div>
-                <div style={{ marginTop: "100px" }}>
-                    <div className="unit-5 text-center">
-                        <div className="unit-4-icon mr-4">
-                            <span className="feather-pie-chart"></span>
-                        </div>
-                        <div>
-                            <h3>Pie Chart</h3>
-                            <p>Design Customized Pie Chart</p>
-                        </div>
+                <div className="unit-5 text-center">
+                    <div className="unit-4-icon mr-4">
+                        <span className="feather-pie-chart"></span>
+                    </div>
+                    <div>
+                        <h3>Pie Chart</h3>
+                        <p>Design Customized Pie Chart</p>
                     </div>
                 </div>
                 <div>
@@ -166,96 +124,98 @@ export default function PieChartCode() {
                         </div>
                     </form>
                 </div>
-                <div>
-                    {/* {eachdetail && <h5 className='text-center text-danger fw-900'>{eachdetail}</h5>} */}
-                </div>
                 {dataMock.length !== 0 &&
-                    <div className='d-flex align-items-center' id='printIdPie' ref={componentRef}>
-                        <div style={{ width: "500px", height: "550px", margin: "auto" }}>
-                            <PieChart
-                                data={dataMock}
-                                // radius={pietype===5?60:pietype===3?40:PieChart.defaultProps.radius - shiftSize}
-                                radius={pietype === 5 ? 60 : 40}
-                                segmentsShift={(index) => (pietype === 1 && index === shitindex ? shiftSize : 0.5)}
-                                // onBlur={(e, index) => (console.log("onBlur: ", e, index))}
-                                // onClick={(e, index) => (seteachdetail(`${dataMock[index].title}: ${dataMock[index].value}`))}
-                                onClick={(e, index) => (setshitindex(index))}
-                                // onMouseOut={(e, index) => (seteachdetail(''))}
-                                // onFocus={(e, index) => (console.log("onFocus: ", e, index))}
-                                // onKeyDown={(e, index) => (console.log("onKeyDown: ", e, index))}
-                                // onMouseOut={(e, index) => (console.log("onMouseOut: ", e, index))}
-                                // onMouseOver={(e, index) => (console.log("onMouseOver: ", e, index))}
-                                lineWidth={pietype === 2 || pietype === 3 ? 15 : 100}
-                                rounded={pietype === 2 ? true : false}
-                                paddingAngle={pietype === 3 ? 5 : 0}
-                                startAngle={pietype === 4 ? 180 : pietype === 5 ? -180 : 0}
-                                lengthAngle={pietype === 4 ? 180 : pietype === 5 ? 90 : 360}
-                                viewBoxSize={pietype === 4 ? [100, 50] : [100, 100]}
-                                center={pietype === 5 ? [70, 80] : pietype === 4 ? [50, 40] : [50, 50]}
-                                totalValue={totalValue}
-                                animate
-                                animationDuration={1000}
-                                animationEasing={"ease-out"}
-                                // reveal={100}
-                                // background="#bfbfbf"
-                                // label={({ dataEntry }) => dataEntry.title + ' - ' + Math.round(dataEntry.percentage) + '%' + 'Value: ' + dataEntry.value}
-                                // label={({ dataEntry }) => `${dataEntry.title} - ${dataEntry.value}`}
-                                label={({ dataEntry }) => dataEntry.value}
-                                // label={({ x, y, dx, dy, dataEntry }) => (
-                                //     <text
-                                //         key={dx}
-                                //         x={x}
-                                //         y={y}
-                                //         dx={dx}
-                                //         dy={dy}
-                                //         dominantBaseline="central"
-                                //         textAnchor="middle"
-                                //         style={{
-                                //             fill: '#fff', pointerEvents: 'none', fontSize: '3px', fontFamily: 'sans-serif', fontWeight: '600'
-                                //         }}
-                                //     >
-                                //         <tspan x={x} y={y} dx={dx} dy={dy}>{dataEntry.title}</tspan>
-                                //         {/* <tspan x={x} y={y} dx={dx} dy={dy}>{`${Math.round(dataEntry.percentage)}%`}</tspan> */}
-                                //         <tspan x={x} y={y + 10} dx={dx} dy={dy}>Value: {dataEntry.value}</tspan>
-                                //     </text>
-                                // )}
-                                labelStyle={{
-                                    fontSize: '3px',
-                                    fontFamily: 'sans-serif',
-                                    fill: '#000',
-                                    fontWeight: '600',
-                                    pointerEvents: 'none'
-                                }}
-                                // labelPosition={70}
-                                labelPosition={labeltype === 0 ? 70 : 105}
-                            />
-                        </div>
+                    <>
                         <div>
-                            <i className='text-center d-block'>{heading}</i>
-                            <div className='d-flex gap-10 align-items-center fw-800'><span style={{
-                                border: "2px solid #000000",
-                                background: "#fff",
-                                width: "15px",
-                                borderRadius: "50%",
-                                display: "block",
-                                height: "15px"
-                            }}></span>
-                                <span>Total: {totalValue}</span>
+                            <button onClick={handlePrint} className='btn-sm btn-secondary'><span className='feather-printer'></span> Print</button>
+                        </div>
+                        <div className='d-flex align-items-center w-90' style={{ margin: 'auto', height: "650px" }} id='printIdPie' ref={componentRef}>
+                            <div className='m-auto' style={pietype === 4 || pietype === 5 ? { width: "500px", height: "350px", border: "1px solid #ccc" } : { width: "500px", height: "550px", border: "1px solid #ccc" }}>
+                                <PieChart
+                                    data={dataMock}
+                                    // radius={pietype===5?60:pietype===3?40:PieChart.defaultProps.radius - shiftSize}
+                                    radius={pietype === 5 ? 60 : 40}
+                                    segmentsShift={(index) => (pietype === 1 && index === shitindex ? shiftSize : 0.5)}
+                                    // onBlur={(e, index) => (console.log("onBlur: ", e, index))}
+                                    // onClick={(e, index) => (seteachdetail(`${dataMock[index].title}: ${dataMock[index].value}`))}
+                                    onClick={(e, index) => (setshitindex(index))}
+                                    // onMouseOut={(e, index) => (seteachdetail(''))}
+                                    // onFocus={(e, index) => (console.log("onFocus: ", e, index))}
+                                    // onKeyDown={(e, index) => (console.log("onKeyDown: ", e, index))}
+                                    // onMouseOut={(e, index) => (console.log("onMouseOut: ", e, index))}
+                                    // onMouseOver={(e, index) => (console.log("onMouseOver: ", e, index))}
+                                    lineWidth={pietype === 2 || pietype === 3 ? 15 : 100}
+                                    rounded={pietype === 2 ? true : false}
+                                    paddingAngle={pietype === 3 ? 5 : 0}
+                                    startAngle={pietype === 4 ? 180 : pietype === 5 ? -180 : 0}
+                                    lengthAngle={pietype === 4 ? 180 : pietype === 5 ? 90 : 360}
+                                    viewBoxSize={pietype === 4 ? [100, 50] : [100, 100]}
+                                    center={pietype === 5 ? [70, 80] : pietype === 4 ? [50, 40] : [50, 50]}
+                                    totalValue={totalValue}
+                                    animate
+                                    animationDuration={1000}
+                                    animationEasing={"ease-out"}
+                                    // reveal={100}
+                                    // background="#bfbfbf"
+                                    // label={({ dataEntry }) => dataEntry.title + ' - ' + Math.round(dataEntry.percentage) + '%' + 'Value: ' + dataEntry.value}
+                                    // label={({ dataEntry }) => `${dataEntry.title} - ${dataEntry.value}`}
+                                    label={({ dataEntry }) => dataEntry.value}
+                                    // label={({ x, y, dx, dy, dataEntry }) => (
+                                    //     <text
+                                    //         key={dx}
+                                    //         x={x}
+                                    //         y={y}
+                                    //         dx={dx}
+                                    //         dy={dy}
+                                    //         dominantBaseline="central"
+                                    //         textAnchor="middle"
+                                    //         style={{
+                                    //             fill: '#fff', pointerEvents: 'none', fontSize: '3px', fontFamily: 'sans-serif', fontWeight: '600'
+                                    //         }}
+                                    //     >
+                                    //         <tspan x={x} y={y} dx={dx} dy={dy}>{dataEntry.title}</tspan>
+                                    //         {/* <tspan x={x} y={y} dx={dx} dy={dy}>{`${Math.round(dataEntry.percentage)}%`}</tspan> */}
+                                    //         <tspan x={x} y={y + 10} dx={dx} dy={dy}>Value: {dataEntry.value}</tspan>
+                                    //     </text>
+                                    // )}
+                                    labelStyle={{
+                                        fontSize: '3px',
+                                        fontFamily: 'sans-serif',
+                                        fill: '#000',
+                                        fontWeight: '600',
+                                        pointerEvents: 'none'
+                                    }}
+                                    // labelPosition={70}
+                                    labelPosition={labeltype === 0 ? 70 : 105}
+                                />
+                                <i className='text-center d-block mt-3'>{heading}</i>
                             </div>
-                            {dataMock.map((eachSection, idx) => (
-                                <div key={idx} className='d-flex gap-10 align-items-center'><span style={{
-                                    border: "1px solid #000000",
-                                    background: `${eachSection.color}`,
+                            <div>
+                                <div className='d-flex gap-10 align-items-center fw-800'><span style={{
+                                    border: "2px solid #000000",
+                                    background: "#fff",
                                     width: "15px",
                                     borderRadius: "50%",
                                     display: "block",
                                     height: "15px"
                                 }}></span>
-                                    <span>{eachSection.title}: {eachSection.value}</span>
+                                    <span>Total: {totalValue}</span>
                                 </div>
-                            ))}
+                                {dataMock.map((eachSection, idx) => (
+                                    <div key={idx} className='d-flex gap-10 align-items-center'><span style={{
+                                        border: "1px solid #000000",
+                                        background: `${eachSection.color}`,
+                                        width: "15px",
+                                        borderRadius: "50%",
+                                        display: "block",
+                                        height: "15px"
+                                    }}></span>
+                                        <span style={{ whiteSpace: 'nowrap', width: '100px', overflow: 'hidden', textOverflow: 'ellipsis' }}>{eachSection.title}: {eachSection.value}</span>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
+                    </>
                 }
             </div>
             <Footer />

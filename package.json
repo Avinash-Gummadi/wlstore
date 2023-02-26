@@ -10,11 +10,14 @@
     "bootstrap-icons": "^1.9.1",
     "browser-image-compression": "^2.0.0",
     "buffer": "^6.0.3",
+    "chart.js": "^3.9.1",
+    "faker": "^6.6.6",
     "image-file-resize": "^1.0.5",
     "instagram-downloader": "^0.0.0",
     "pdf-merger-js": "^4.1.1",
     "qrcode.react": "^3.1.0",
     "react": "^18.2.0",
+    "react-chartjs-2": "^4.3.1",
     "react-convert-image": "^0.5.0",
     "react-document-meta": "^3.0.0-beta.2",
     "react-dom": "^18.2.0",
@@ -59,5 +62,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^7.6.0"
   }
 }

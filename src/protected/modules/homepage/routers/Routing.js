@@ -21,6 +21,7 @@ import ToDo from '../views/ToDo';
 import TypingSkill from '../views/TypingSkill';
 import PieChartCode from '../views/PieChartCode';
 import TypingTips from '../views/TypingTips';
+import BarChart from '../views/BarChart';
 
 const ErrorPage = () => <div><h1>Page Not Found, contact administrator. Later design page for this</h1></div>
 
@@ -42,6 +43,7 @@ const Routing = () => {
                 <Route exact={true} path="learn-typing" element={<TypingSkill />}></Route>
                 <Route exact={true} path="typing-tips" element={<TypingTips />}></Route>
                 <Route exact={true} path="piechart" element={<PieChartCode />}></Route>
+                <Route exact={true} path="barchart" element={<BarChart />}></Route>
                 <Route exact={true} path="imageCompress" element={<ImageCompress />}></Route>
                 <Route exact={true} path="auth" element={<Authuser />}></Route>
                 <Route exact={true} path='*' element={<ErrorPage />}></Route>

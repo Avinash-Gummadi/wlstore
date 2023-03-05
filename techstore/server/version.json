@@ -1,0 +1,10 @@
+{
+    "main_min": "1",
+    "jsChunks": "1",
+    "cssChunks": "1",
+    "mim_main_pwa": "1",
+    "forceUp": 1,
+    "serverToggle": 0,
+    "cssUp": false,
+    "newRouteVersion": 1
+}
